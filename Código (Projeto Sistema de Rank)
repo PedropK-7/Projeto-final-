@@ -40,13 +40,13 @@ def rotacao_esquerda(x):
     y.altura = max(altura(y.esq), altura(y.dir)) + 1
     return y 
 
-# Função para inserir um usuário na árvore AVL
+# Função para adicionar um usuário na árvore AVL
 def inserir_avl(raiz, usuario):
     # Caso base: insere na posição vazia
     if not raiz:
         return NodoAVL(usuario)
 
-    # Insere na subárvore correta (esquerda ou direita) conforme a pontuação
+    # Adicionar na subárvore correta (esquerda ou direita) conforme a pontuação
     if usuario.pontuacao < raiz.usuario.pontuacao:
         raiz.esq = inserir_avl(raiz.esq, usuario)
     else:
