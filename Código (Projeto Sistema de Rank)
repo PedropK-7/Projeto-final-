@@ -104,7 +104,7 @@ while True:
         nome = input("Digite o nome do usuário: ").strip()
         if nome in tabela_hash:
             jogador = tabela_hash[nome]
-            print(f"✅{jogador.nome} tem {jogador.pontuacao} pontos.")
+            print(f"{jogador.nome} tem {jogador.pontuacao} pontos.")
         else:
             print("Usuário não encontrado.")
 
