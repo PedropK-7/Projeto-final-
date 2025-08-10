@@ -1,0 +1,123 @@
+class Usuario:
+    def __init__(self, nome, pontuacao):
+        self.nome = nome
+        self.pontuacao = pontuacao
+
+# estrutura do no da árvore AVL
+class NodoAVL:
+    def __init__(self, usuario):
+        self.usuario = usuario
+        self.esq = None
+        self.dir = None
+        self.altura = 1
+
+# funções da AVL
+def altura(nodo):
+    return nodo.altura if nodo else 0
+
+def fator_balanceamento(nodo):
+    return altura(nodo.esq) - altura(nodo.dir) if nodo else 0
+
+def rotacao_direita(y):
+    x = y.esq
+    T2 = x.dir
+    x.dir = y
+    y.esq = T2
+    y.altura = max(altura(y.esq), altura(y.dir)) + 1
+    x.altura = max(altura(x.esq), altura(x.dir)) + 1
+    return x
+
+def rotacao_esquerda(x):
+    y = x.dir
+    T2 = y.esq
+    y.esq = x
+    x.dir = T2
+    x.altura = max(altura(x.esq), altura(x.dir)) + 1
+    y.altura = max(altura(y.esq), altura(y.dir)) + 1
+    return y
+
+def inserir_avl(raiz, usuario):
+    if not raiz:
+        return NodoAVL(usuario)
+    
+    if usuario.pontuacao < raiz.usuario.pontuacao:
+        raiz.esq = inserir_avl(raiz.esq, usuario)
+    else:
+        raiz.dir = inserir_avl(raiz.dir, usuario)
+
+    raiz.altura = 1 + max(altura(raiz.esq), altura(raiz.dir))
+    balance = fator_balanceamento(raiz)
+
+    # Balanceamentos
+# Simples para direita 
+    if balance > 1 and usuario.pontuacao < raiz.esq.usuario.pontuacao:
+        return rotacao_direita(raiz)
+# Simples para esquerda
+    if balance < -1 and usuario.pontuacao > raiz.dir.usuario.pontuacao:
+        return rotacao_esquerda(raiz)
+# Duplo para direita
+    if balance > 1 and usuario.pontuacao > raiz.esq.usuario.pontuacao:
+        raiz.esq = rotacao_esquerda(raiz.esq)
+        return rotacao_direita(raiz)
+# Duplo para esquerda
+    if balance < -1 and usuario.pontuacao < raiz.dir.usuario.pontuacao:
+        raiz.dir = rotacao_direita(raiz.dir)
+        return rotacao_esquerda(raiz)
+
+    return raiz
+
+def exibir_ranking(raiz):
+    if raiz:
+        exibir_ranking(raiz.dir)
+        print(f"{raiz.usuario.nome} - {raiz.usuario.pontuacao} pontos")
+        exibir_ranking(raiz.esq)
+
+# Principal
+ranking_avl = None
+tabela_hash = {}  # Nome -> Usuario
+
+while True:
+    print("\n--- MENU ---")
+    print("1 - Adicionar Usuário")
+    print("2 - Buscar Usuário")
+    print("3 - Ver ranking")
+    print("4 - Sair")
+    opcao = input("Escolha: ")
+
+    if opcao == "1":
+        nome = input("Nome do usuário: ").strip()
+        if nome in tabela_hash:
+            print("Usuário já cadastrado!")
+            continue
+        try:
+            pontuacao = int(input("Pontuação: "))
+        except ValueError:
+            print("Pontuação inválida!")
+            continue
+        
+        jogador = Usuario(nome, pontuacao)
+        ranking_avl = inserir_avl(ranking_avl, jogador)
+        tabela_hash[nome] = jogador
+        print("adicionado!")
+
+    elif opcao == "2":
+        nome = input("Digite o nome do usuário: ").strip()
+        if nome in tabela_hash:
+            jogador = tabela_hash[nome]
+            print(f"✅{jogador.nome} tem {jogador.pontuacao} pontos.")
+        else:
+            print("Usuário não encontrado.")
+
+    elif opcao == "3":
+        if ranking_avl:
+            print("\n--- RANKING ---")
+            exibir_ranking(ranking_avl)
+        else:
+            print("⚠ Ranking vazio.")
+
+    elif opcao == "4":
+        print("Encerrando...")
+        break
+    else:
+        print("Opção inválida!")
+        
