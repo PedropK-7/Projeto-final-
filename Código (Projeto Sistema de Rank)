@@ -52,7 +52,6 @@ def inserir_avl(raiz, usuario):
     else:
         raiz.dir = inserir_avl(raiz.dir, usuario)
 
-    # Atualiza altura do nó atual
     raiz.altura = 1 + max(altura(raiz.esq), altura(raiz.dir))
 
     # Calcula o fator de balanceamento para verificar se precisa rotacionar
@@ -77,7 +76,6 @@ def inserir_avl(raiz, usuario):
         raiz.dir = rotacao_direita(raiz.dir)
         return rotacao_esquerda(raiz)
 
-    # Retorna a raiz (possivelmente atualizada após rotação)
     return raiz
 
 # Função para exibir o ranking (ordem decrescente de pontuação)
@@ -91,6 +89,8 @@ def exibir_ranking(raiz):
 
 ranking_avl = None  # Árvore AVL que armazenará o ranking
 tabela_hash = {}    # Tabela hash para busca rápida por nome (Nome -> Usuario)
+
+#Layout do menu
 
 while True:
     print("\n--- MENU ---")
